@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import { exec } from "child_process";
-import * as fs from "fs";
+import { exec } from "node:child_process";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
-const excludedFilesPath = "./excludedFiles.json";
+const excludedFilesPath = path.join(__dirname, "excludedFiles.json"); // __dirnameを使用
 let excludedFiles: string[] = [];
 
 try {
