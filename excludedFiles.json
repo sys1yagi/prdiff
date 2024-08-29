@@ -1,0 +1,23 @@
+{
+    "excludedFiles": [
+        "node_modules/",
+        "package-lock.json",
+        "yarn.lock",
+        "pnpm-lock.yaml",
+        ".env",
+        "dist/",
+        "build/",
+        "vendor/",
+        "*.test.go",
+        "*.mod",
+        "*.sum",
+        "target/",
+        "*.class",
+        "*.jar",
+        "*.war",
+        "*.iml",
+        "*.gradle",
+        ".gitignore",
+        "*.log"
+    ]
+}
