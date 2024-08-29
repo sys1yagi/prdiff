@@ -1,6 +1,6 @@
 {
   "name": "prdiff",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Get Guthub Pull Request diff for Generative AI.",
   "main": "index.js",
   "bin": {
@@ -21,7 +21,11 @@
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@types/node": "^22.5.1",
+    "@types/yargs": "^17.0.33",
     "copyfiles": "^2.4.1",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2"
   }
 }

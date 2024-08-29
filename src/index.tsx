@@ -3,34 +3,71 @@
 import { exec } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import yargs from "yargs/yargs";
+import { hideBin } from "yargs/helpers";
 
-const excludedFilesPath = path.join(__dirname, "excludedFiles.json"); // __dirnameを使用
-let excludedFiles: string[] = [];
+const argv = yargs(hideBin(process.argv))
+	.usage("Usage: $0 <target_branch> [options]")
+	.command("<target_branch>", "The branch you want to compare")
+	.option("base", {
+		alias: "b",
+		default: "origin/main",
+		describe: "Base branch to compare against",
+		type: "string",
+	})
+	.option("use-origin-prefix", {
+		alias: "u",
+		default: true,
+		describe: "Use origin prefix",
+		type: "boolean",
+	})
+	.option("exclude-file", {
+		alias: "e",
+		describe: "Path to a custom JSON file for excluded files",
+		type: "string",
+	})
+	.help().argv as {
+	_: (string | number)[];
+	base: string;
+	"use-origin-prefix": boolean;
+	"exclude-file"?: string;
+};
 
-try {
-	const data = fs.readFileSync(excludedFilesPath, "utf8");
-	const json = JSON.parse(data);
-	excludedFiles = json.excludedFiles || [];
-} catch (error) {
-	console.error(`Error reading excluded files: ${(error as Error).message}`);
-	process.exit(1);
-}
-
-const targetBranch = process.argv[2];
-const baseBranch = process.argv[3] || "origin/main";
-const useOriginPrefix = process.argv[4] !== "false";
+const targetBranch = argv._[0] as string; // target_branch
+const baseBranch = argv.base as string; // base branch
+const useOriginPrefix = argv["use-origin-prefix"] as boolean; // use origin prefix
+const customExcludedFilesPath = argv["exclude-file"] as string | undefined; // exclude file
 
 if (!targetBranch) {
-	console.error(
-		"Usage: prdiff <target_branch> [base_branch] [use_origin_prefix]",
-	);
+	console.error("Error: target_branch is required.");
 	process.exit(1);
 }
+// 除外ファイルのリストを読み込む関数
+const loadExcludedFiles = (customExcludedFilesPath?: string): string[] => {
+	if (customExcludedFilesPath) {
+		console.log("load customExcludedFiles:", customExcludedFilesPath);
+		const customExcludedFiles = fs.readFileSync(
+			customExcludedFilesPath,
+			"utf8",
+		);
+		return JSON.parse(customExcludedFiles).excludedFiles || [];
+	}
+
+	const excludedFilesPath = path.join(__dirname, "excludedFiles.json");
+	const defaultExcludedFiles = fs.readFileSync(excludedFilesPath, "utf8");
+	return JSON.parse(defaultExcludedFiles).excludedFiles || [];
+};
 
 // targetBranch に origin/ を付けるかどうかを決定
 const targetBranchWithPrefix = useOriginPrefix
 	? `origin/${targetBranch}`
 	: targetBranch;
+
+// 除外ファイルのリストを取得
+const excludedFiles = loadExcludedFiles(customExcludedFilesPath);
+const excludeArgs = excludedFiles
+	.map((file: string) => `':(exclude)${file}'`)
+	.join(" ");
 
 // git fetchを実行して最新の状態を取得
 exec("git fetch", (fetchError) => {
@@ -48,11 +85,6 @@ exec("git fetch", (fetchError) => {
 				return;
 			}
 
-			const excludeArgs = excludedFiles
-				.map((file) => `':(exclude)${file}'`)
-				.join(" ");
-
-			// git diffコマンドを実行
 			const command = `git diff ${baseCommit.trim()}...${targetBranchWithPrefix} -- ${excludeArgs}`;
 
 			exec(command, (diffError, stdout, stderr) => {
