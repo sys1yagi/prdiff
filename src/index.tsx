@@ -45,6 +45,7 @@ if (!targetBranch) {
 // 除外ファイルのリストを読み込む関数
 const loadExcludedFiles = (customExcludedFilesPath?: string): string[] => {
 	if (customExcludedFilesPath) {
+		console.log("load customExcludedFiles:", customExcludedFilesPath);
 		const customExcludedFiles = fs.readFileSync(
 			customExcludedFilesPath,
 			"utf8",
