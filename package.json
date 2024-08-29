@@ -1,6 +1,6 @@
 {
   "name": "prdiff",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Get Guthub Pull Request diff for Generative AI.",
   "main": "index.js",
   "bin": {
@@ -10,7 +10,7 @@
     "excludedFiles.json"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && copyfiles excludedFiles.json dist/",
     "start": "node dist/index.js",
     "lint": "biome lint ./src",
     "format": "biome format --write ./src"
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@types/node": "^22.5.1",
+    "copyfiles": "^2.4.1",
     "typescript": "^5.5.4"
   }
 }
