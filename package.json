@@ -1,0 +1,20 @@
+{
+  "name": "prdiff",
+  "version": "1.0.0",
+  "description": "Get Guthub Pull Request diff for Generative AI.",
+  "main": "index.js",
+  "bin": {
+    "prdiff": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.5.1",
+    "typescript": "^5.5.4"
+  }
+}
