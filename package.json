@@ -2,6 +2,10 @@
   "name": "prdiff",
   "version": "1.0.2",
   "description": "Get Guthub Pull Request diff for Generative AI.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sys1yagi/prdiff.git"
+  },
   "main": "index.js",
   "bin": {
     "prdiff": "./dist/index.js"
