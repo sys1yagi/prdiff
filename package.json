@@ -1,6 +1,6 @@
 {
   "name": "prdiff",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Get Guthub Pull Request diff for Generative AI.",
   "repository": {
     "type": "git",
